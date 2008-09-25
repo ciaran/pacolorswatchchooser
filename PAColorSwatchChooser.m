@@ -86,7 +86,7 @@
 			NSRect outerRect = NSInsetRect(swatchRect,-3,-3);
 			NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:outerRect xRadius:2 yRadius:2];
 			[noShadow set];
-			if(i == selectedIndex) {
+			if(i == highlightedIndex) {
 				[[NSColor colorWithDeviceWhite:0.8 alpha:1] set];
 				[path fill];
 			}
