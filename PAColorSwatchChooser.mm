@@ -82,13 +82,13 @@ static const float SwatchMargin   = 4;
 		{{224,190,234},{192,142,217}},	{{205,205,206},{169,169,169}},
 	};
 	
-	NSShadow *shadow = [[NSShadow alloc] init];
+	NSShadow *shadow = [[[NSShadow alloc] init] autorelease];
 	[shadow setShadowColor:[NSColor colorWithDeviceWhite:0 alpha:0.75]];
 	[shadow setShadowOffset:NSMakeSize(0,-1)];
 	[shadow setShadowBlurRadius:2];
 	[shadow set];
 	
-	NSShadow *noShadow = [[NSShadow alloc] init];
+	NSShadow *noShadow = [[[NSShadow alloc] init] autorelease];
 	
 	int i;
 	for(i=0;i<8;i++) {
@@ -121,7 +121,9 @@ static const float SwatchMargin   = 4;
 				tc = [NSColor colorWithDeviceWhite:0.70 alpha:1.0];
 			}
 			
-			[[[NSGradient alloc] initWithStartingColor:swatches[i].from(alpha) endingColor:tc] drawInRect:swatchRect angle:-90];
+			NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:swatches[i].from(alpha) endingColor:tc];
+			[gradient drawInRect:swatchRect angle:-90];
+			[gradient release];
 			
 		}else{
 			[noShadow set];
