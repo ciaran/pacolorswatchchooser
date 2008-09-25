@@ -16,7 +16,8 @@ static const float SwatchMargin   = 4;
 - (id)initWithFrame:(NSRect)rect
 {
 	if(self = [super initWithFrame:rect]) {
-		enabled = YES;
+		enabled          = YES;
+		highlightedIndex = -1;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSViewFrameDidChangeNotification object:self];
 	}
 	return self;
