@@ -150,8 +150,7 @@ static const float SwatchMargin   = 4;
 	}
 }
 
-- (void)setupTrackingRects
-{
+- (void)setupTrackingRects {
 	int i;
 	for(i=0;i<8;i++) {
 		if(tags[i])
@@ -160,15 +159,13 @@ static const float SwatchMargin   = 4;
 	}
 }
 
-- (void)mouseEntered:(NSEvent*)event
-{
+- (void)mouseEntered:(NSEvent*)event {
 	[super mouseEntered:event];
 	highlightedIndex = (int)[event userData];
 	[self setNeedsDisplay:YES];
 }
 
-- (void)mouseExited:(NSEvent*)event
-{
+- (void)mouseExited:(NSEvent*)event {
 	[super mouseExited:event];
 	highlightedIndex = -1;
 	[self setNeedsDisplay:YES];
