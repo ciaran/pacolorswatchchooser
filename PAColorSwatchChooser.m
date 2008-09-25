@@ -138,14 +138,14 @@ static const float SwatchMargin   = 4;
 	for(i=0;i<8;i++) {
 		if(tags[i])
 			[self removeTrackingRect:tags[i]];
-		tags[i] = [self addTrackingRect:NSInsetRect([self rectForSwatchAtIndex:i], -SwatchMargin, -SwatchMargin) owner:self userData:i assumeInside:NO];
+		tags[i] = [self addTrackingRect:NSInsetRect([self rectForSwatchAtIndex:i], -SwatchMargin, -SwatchMargin) owner:self userData:(void*)i assumeInside:NO];
 	}
 }
 
 - (void)mouseEntered:(NSEvent*)event
 {
 	[super mouseEntered:event];
-	highlightedIndex = [event userData];
+	highlightedIndex = (int)[event userData];
 	[self setNeedsDisplay:YES];
 }
 
