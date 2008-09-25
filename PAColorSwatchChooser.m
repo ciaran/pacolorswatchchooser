@@ -11,8 +11,13 @@
 
 @implementation PAColorSwatchChooser
 
-- (void)awakeFromNib {
-	enabled = YES;
+- (id)initWithFrame:(NSRect)rect
+{
+	if(self = [super initWithFrame:rect]) {
+		enabled = YES;
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSViewFrameDidChangeNotification object:self];
+	}
+	return self;
 }
 
 + (void)initialize {
@@ -77,12 +82,14 @@
 		NSColor *fc = [NSColor colorWithDeviceRed:rc[i*2]/255.0f green:gc[i*2]/255.0f blue:bc[i*2]/255.0f alpha:alpha];
 		NSColor *tc = [NSColor colorWithDeviceRed:rc[(i*2)+1]/255.0f green:gc[(i*2)+1]/255.0f blue:bc[(i*2)+1]/255.0f alpha:alpha];
 		
-		if(i == selectedIndex && enabled) {
+		if((i == highlightedIndex || i == selectedIndex) && enabled) {
 			NSRect outerRect = NSInsetRect(swatchRect,-3,-3);
 			NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:outerRect xRadius:2 yRadius:2];
 			[noShadow set];
-			[[NSColor colorWithDeviceWhite:0.8 alpha:1] set];
-			[path fill];
+			if(i == selectedIndex) {
+				[[NSColor colorWithDeviceWhite:0.8 alpha:1] set];
+				[path fill];
+			}
 			[[NSColor colorWithDeviceWhite:0.6 alpha:1] set];
 			[path stroke];
 		}
@@ -121,6 +128,39 @@
 			[line stroke];
 		}
 	}
+}
+
+- (void)setupTrackingRects
+{
+	int i;
+	for(i=0;i<8;i++) {
+		if(tags[i])
+			[self removeTrackingRect:tags[i]];
+		tags[i] = [self addTrackingRect:NSInsetRect([self rectForSwatchAtIndex:i], -3, -3) owner:self userData:i assumeInside:NO];
+	}
+}
+
+- (void)mouseEntered:(NSEvent*)event
+{
+	[super mouseEntered:event];
+	highlightedIndex = [event userData];
+	[self setNeedsDisplay:YES];
+}
+
+- (void)mouseExited:(NSEvent*)event
+{
+	[super mouseExited:event];
+	highlightedIndex = -1;
+	[self setNeedsDisplay:YES];
+}
+
+- (void)viewDidMoveToWindow {
+	[super viewDidMoveToWindow];
+	[self setupTrackingRects];
+}
+
+- (void)frameDidChange:(NSNotification*)notification {
+	[self setupTrackingRects];
 }
 
 - (BOOL)isEnabled {

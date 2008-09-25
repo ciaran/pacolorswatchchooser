@@ -12,6 +12,8 @@
 @interface PAColorSwatchChooser : NSView {
 	int selectedIndex;
 	BOOL enabled;
+	int highlightedIndex;
+	NSTrackingRectTag tags[8];
 }
 
 @end
