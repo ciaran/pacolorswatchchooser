@@ -63,9 +63,24 @@ static const float SwatchMargin   = 4;
 
 
 - (void)drawRect:(NSRect)rect {
-	CGFloat rc[] = {0,0,252.0f,251.0f,249.0f,246.0f,249.0f,239.0f,212.0f,180.0f,167.0f,90.0f,224.0f,192.0f,205.0f,169.0f};
-	CGFloat gc[] = {0,0,162.0f,100.0f,206.0f,170.0f,242.0f,219.0f,233.0f,214.0f,208.0f,162.0f,190.0f,142.0f,205.0f,169.0f};
-	CGFloat bc[] = {0,0,154.0f,91.0f,143.0f,68.0f,151.0f,71.0f,151.0f,71.0f,255.0f,255.0f,234.0f,217.0f,206.0f,169.0f};
+	struct swatch_t {
+		struct color_t {
+			CGFloat red, green, blue;
+
+			NSColor *color(float alpha) {
+				return [NSColor colorWithDeviceRed:red/255.0f green:green/255.0f blue:blue/255.0f alpha:alpha];
+			}
+		};
+		NSColor *from(float alpha)	{ return _from.color(alpha);	}
+		NSColor *to(float alpha)	{ return _to.color(alpha);		}
+
+		color_t _from, _to;
+	} swatches[] = {
+		{{0,0,0},{0,0,0}},					{{252,162,154},{251,100,91}},
+		{{249,206,143},{246,170,68}},		{{249,242,151},{239,219,71}},
+		{{212,233,151},{180,214,71}},		{{167,208,255},{90,162,255}},
+		{{224,190,234},{192,142,217}},	{{205,205,206},{169,169,169}},
+	};
 	
 	NSShadow *shadow = [[NSShadow alloc] init];
 	[shadow setShadowColor:[NSColor colorWithDeviceWhite:0 alpha:0.75]];
@@ -81,8 +96,8 @@ static const float SwatchMargin   = 4;
 		
 		float alpha = 1.0; //enabled ? 1.0 : 0.6;
 		
-		NSColor *fc = [NSColor colorWithDeviceRed:rc[i*2]/255.0f green:gc[i*2]/255.0f blue:bc[i*2]/255.0f alpha:alpha];
-		NSColor *tc = [NSColor colorWithDeviceRed:rc[(i*2)+1]/255.0f green:gc[(i*2)+1]/255.0f blue:bc[(i*2)+1]/255.0f alpha:alpha];
+		NSColor *fc = swatches[i].from(alpha);
+		NSColor *tc = swatches[i].to(alpha);
 		
 		if((i == highlightedIndex || i == selectedIndex) && enabled) {
 			NSRect outerRect = NSInsetRect(swatchRect,-SwatchMargin,-SwatchMargin);
@@ -106,7 +121,7 @@ static const float SwatchMargin   = 4;
 				tc = [NSColor colorWithDeviceWhite:0.70 alpha:1.0];
 			}
 			
-			[[[NSGradient alloc] initWithStartingColor:fc endingColor:tc] drawInRect:swatchRect angle:-90];
+			[[[NSGradient alloc] initWithStartingColor:swatches[i].from(alpha) endingColor:tc] drawInRect:swatchRect angle:-90];
 			
 		}else{
 			[noShadow set];
