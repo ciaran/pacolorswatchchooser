@@ -8,6 +8,8 @@
 
 #import "PAColorSwatchChooser.h"
 
+static const float SwatchDiameter = 9;
+static const float SwatchMargin   = 4;
 
 @implementation PAColorSwatchChooser
 
@@ -43,7 +45,7 @@
 }
 
 - (NSRect)rectForSwatchAtIndex:(int)index {
-	return (index < 8) ? NSMakeRect(5 + index*20,5,10,10) : NSZeroRect;
+	return (index < 8) ? NSMakeRect(5 + index*(SwatchDiameter + SwatchMargin*2),5,SwatchDiameter,SwatchDiameter) : NSZeroRect;
 }
 
 
@@ -51,7 +53,7 @@
 	if(!enabled) return;
 	NSPoint localPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	for(int i=0;i<8;i++) {
-		NSRect hitRect = NSInsetRect([self rectForSwatchAtIndex:i], -4, -4);
+		NSRect hitRect = NSInsetRect([self rectForSwatchAtIndex:i], -(SwatchMargin+1), -(SwatchMargin+1));
 		if(NSPointInRect(localPoint, hitRect))
 			selectedIndex = i;
 	}
@@ -83,7 +85,7 @@
 		NSColor *tc = [NSColor colorWithDeviceRed:rc[(i*2)+1]/255.0f green:gc[(i*2)+1]/255.0f blue:bc[(i*2)+1]/255.0f alpha:alpha];
 		
 		if((i == highlightedIndex || i == selectedIndex) && enabled) {
-			NSRect outerRect = NSInsetRect(swatchRect,-3,-3);
+			NSRect outerRect = NSInsetRect(swatchRect,-SwatchMargin,-SwatchMargin);
 			NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:outerRect xRadius:2 yRadius:2];
 			[noShadow set];
 			if(i == highlightedIndex) {
@@ -136,7 +138,7 @@
 	for(i=0;i<8;i++) {
 		if(tags[i])
 			[self removeTrackingRect:tags[i]];
-		tags[i] = [self addTrackingRect:NSInsetRect([self rectForSwatchAtIndex:i], -3, -3) owner:self userData:i assumeInside:NO];
+		tags[i] = [self addTrackingRect:NSInsetRect([self rectForSwatchAtIndex:i], -SwatchMargin, -SwatchMargin) owner:self userData:i assumeInside:NO];
 	}
 }
 
