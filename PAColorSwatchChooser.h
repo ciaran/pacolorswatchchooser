@@ -14,6 +14,13 @@
 	BOOL enabled;
 	int highlightedIndex;
 	NSTrackingRectTag tags[8];
+	id delegate;
+	BOOL drawLabels;
 }
+@property (assign) id delegate;
+@property (assign) BOOL enabled;
+@end
 
+@protocol PAColorSwatchChooserDelegate
+- (NSString*)labelNameForIndex:(int)index;
 @end

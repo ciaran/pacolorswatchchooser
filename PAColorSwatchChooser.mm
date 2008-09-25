@@ -8,8 +8,9 @@
 
 #import "PAColorSwatchChooser.h"
 
-static const float SwatchDiameter = 9;
-static const float SwatchMargin   = 4;
+static const float SwatchDiameter  = 9;
+static const float SwatchMargin    = 4;
+static const float LabelNameHeight = 15;
 
 @implementation PAColorSwatchChooser
 
@@ -46,7 +47,7 @@ static const float SwatchMargin   = 4;
 }
 
 - (NSRect)rectForSwatchAtIndex:(int)index {
-	return (index < 8) ? NSMakeRect(5 + index*(SwatchDiameter + SwatchMargin*2),5,SwatchDiameter,SwatchDiameter) : NSZeroRect;
+	return (index < 8) ? NSMakeRect(5 + index*(SwatchDiameter + SwatchMargin*2), (drawLabels ? LabelNameHeight : 0) + 5, SwatchDiameter, SwatchDiameter) : NSZeroRect;
 }
 
 
@@ -148,6 +149,22 @@ static const float SwatchMargin   = 4;
 			[line stroke];
 		}
 	}
+	[noShadow set];
+
+	if(highlightedIndex != -1) {
+		NSFont *font   = [[NSFontManager sharedFontManager] convertFont:[NSFont menuFontOfSize:12] toHaveTrait:NSBoldFontMask];
+		if(drawLabels) {
+			NSString *name                 = [delegate labelNameForIndex:highlightedIndex];
+			NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+			[style setAlignment:NSCenterTextAlignment];
+			NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName,
+																										 [NSColor grayColor], NSForegroundColorAttributeName,
+																										 style, NSParagraphStyleAttributeName,
+																										 nil];
+			[style release];
+			[[NSString stringWithFormat:@"“%@”", name] drawInRect:NSMakeRect(0, 0, [self bounds].size.width, 15) withAttributes:attributes];
+		}
+	}
 }
 
 - (void)setupTrackingRects {
@@ -180,12 +197,11 @@ static const float SwatchMargin   = 4;
 	[self setupTrackingRects];
 }
 
-- (BOOL)isEnabled {
-	return enabled;
-}
+@synthesize enabled, delegate;
 
-- (void)setIsEnabled:(BOOL)enable {
-	enabled = enable;
+- (void)setDelegate:(id)newDelegate {
+	delegate   = newDelegate;
+	drawLabels = delegate && [delegate respondsToSelector:@selector(labelNameForIndex:)];
+	[self setupTrackingRects];
 }
-
 @end
