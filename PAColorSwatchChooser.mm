@@ -47,7 +47,12 @@ static const float LabelNameHeight = 15;
 }
 
 - (NSRect)rectForSwatchAtIndex:(int)index {
-	return (index < 8) ? NSMakeRect(5 + index*(SwatchDiameter + SwatchMargin*2), (drawLabels ? LabelNameHeight : 0) + 5, SwatchDiameter, SwatchDiameter) : NSZeroRect;
+	if(index < 8) {
+		return  NSMakeRect(([self enclosingMenuItem] ? 22 : 5) + index*(SwatchDiameter + SwatchMargin*2),
+								(drawLabels ? LabelNameHeight : 0) + 5,
+								SwatchDiameter, SwatchDiameter);
+	}
+	return NSZeroRect;
 }
 
 
@@ -61,6 +66,9 @@ static const float LabelNameHeight = 15;
 
 			if([self target] && [[self target] respondsToSelector:[self action]])
 				[NSApp sendAction:[self action] to:[self target] from:self];
+
+			if([self enclosingMenuItem])
+				[[[self enclosingMenuItem] menu] cancelTracking];
 		}
 	}
 	[self updateModel];
