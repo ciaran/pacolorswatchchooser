@@ -16,9 +16,14 @@
 	NSTrackingRectTag tags[8];
 	id delegate;
 	BOOL drawLabels;
+	id target;
+	SEL action;
 }
 @property (assign) id delegate;
 @property (assign) BOOL enabled;
+@property (assign) id target;
+@property (assign) SEL action;
+@property (readonly) int selectedIndex;
 @end
 
 @protocol PAColorSwatchChooserDelegate

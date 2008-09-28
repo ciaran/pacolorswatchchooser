@@ -56,8 +56,12 @@ static const float LabelNameHeight = 15;
 	NSPoint localPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	for(int i=0;i<8;i++) {
 		NSRect hitRect = NSInsetRect([self rectForSwatchAtIndex:i], -(SwatchMargin+1), -(SwatchMargin+1));
-		if(NSPointInRect(localPoint, hitRect))
+		if(NSPointInRect(localPoint, hitRect)) {
 			selectedIndex = i;
+
+			if([self target] && [[self target] respondsToSelector:[self action]])
+				[NSApp sendAction:[self action] to:[self target] from:self];
+		}
 	}
 	[self updateModel];
 	[self setNeedsDisplay:YES];
@@ -197,7 +201,7 @@ static const float LabelNameHeight = 15;
 	[self setupTrackingRects];
 }
 
-@synthesize enabled, delegate;
+@synthesize enabled, delegate, target, action;
 
 - (void)setDelegate:(id)newDelegate {
 	delegate   = newDelegate;
