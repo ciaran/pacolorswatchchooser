@@ -8,9 +8,9 @@
 
 #import "PAColorSwatchChooser.h"
 
-static const float SwatchDiameter  = 9;
-static const float SwatchMargin    = 4;
-static const float LabelNameHeight = 15;
+static const CGFloat SwatchDiameter  = 9;
+static const CGFloat SwatchMargin    = 4;
+static const CGFloat LabelNameHeight = 15;
 
 @implementation PAColorSwatchChooser
 
@@ -81,12 +81,12 @@ static const float LabelNameHeight = 15;
 		struct color_t {
 			CGFloat red, green, blue;
 
-			NSColor *color(float alpha) {
+			NSColor *color(CGFloat alpha) {
 				return [NSColor colorWithDeviceRed:red/255.0f green:green/255.0f blue:blue/255.0f alpha:alpha];
 			}
 		};
-		NSColor *from(float alpha)	{ return _from.color(alpha);	}
-		NSColor *to(float alpha)	{ return _to.color(alpha);		}
+		NSColor *from(CGFloat alpha)	{ return _from.color(alpha);	}
+		NSColor *to(CGFloat alpha)	{ return _to.color(alpha);		}
 
 		color_t _from, _to;
 	} swatches[] = {
@@ -108,7 +108,7 @@ static const float LabelNameHeight = 15;
 	for(i=0;i<8;i++) {
 		NSRect swatchRect = [self rectForSwatchAtIndex:i];
 		
-		float alpha = 1.0; //enabled ? 1.0 : 0.6;
+		CGFloat alpha = 1.0; //enabled ? 1.0 : 0.6;
 		
 		NSColor *fc = swatches[i].from(alpha);
 		NSColor *tc = swatches[i].to(alpha);
